@@ -23,7 +23,9 @@ All of them are shipped with this lib releases.
 
 ## Usage
 
-Adds `PusherClient` to your uses clause.
+Download the [last relase](https://github.com/monde-sistemas/pusher-websocket-delphi/releases/) zip package and add it to your project.
+
+Add `PusherClient` to your unit uses clause.
 
 ```
 PusherClient := TPusherClient.GetInstance;
