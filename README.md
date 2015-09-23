@@ -83,6 +83,12 @@ PusherClient.OnConnectionStateChange := procedure(Message: string)
 
 You can take a look at the `PusherClientExample` at `delphi\example` for more details.
 
+## Contributing
+
+This lib is a work in progress and any help is greatly appreciated.
+
+Found a bug? Send us a Pull Request or create an issue, we will do our best to help.
+
 ## Acknowledgements
 
-Thanks to @leggetter for the help on the [pusher-websocket-dotnet](https://github.com/pusher-community/pusher-websocket-dotnet) which is the base of this work.
+Thanks to [@leggetter](https://github.com/leggetter) for the help on the [pusher-websocket-dotnet](https://github.com/pusher-community/pusher-websocket-dotnet) which is the base of this work.
