@@ -55,3 +55,10 @@ __history/
 
 # Castalia statistics file
 *.stat
+
+#.NET files
+[Bb]in
+[Oo]bj
+*.suo
+*.vsmdi
+msbuild.log
