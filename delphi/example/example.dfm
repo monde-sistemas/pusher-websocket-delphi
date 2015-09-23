@@ -47,7 +47,7 @@ object PusherClientExampleForm: TPusherClientExampleForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Pusher Key'
       TabOrder = 0
-      Text = 'monde'
+      Text = 'your_key'
     end
     object EdtHost: TLabeledEdit
       Left = 24
@@ -58,7 +58,6 @@ object PusherClientExampleForm: TPusherClientExampleForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Host (Optional)'
       TabOrder = 1
-      Text = 'pusher.monde.com.br'
     end
     object ChkUseSSL: TCheckBox
       Left = 24
@@ -143,7 +142,6 @@ object PusherClientExampleForm: TPusherClientExampleForm
       Lines.Strings = (
         '')
       TabOrder = 0
-      ExplicitLeft = 7
     end
   end
   object GroupBox4: TGroupBox
