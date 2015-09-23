@@ -23,7 +23,7 @@ All of them are shipped with this lib releases.
 
 ## Usage
 
-Download the [last relase](https://github.com/monde-sistemas/pusher-websocket-delphi/releases/) zip package and add it to your project.
+Download the [last relase](https://github.com/monde-sistemas/pusher-websocket-delphi/releases/) zip package and add it to your project. Make sure all the dependencies are on the same folder that your exe.
 
 Add `PusherClient` to your unit uses clause.
 
@@ -35,10 +35,18 @@ PusherClient.Connect('your_pusher_key');
 PusherClient.Subscribe('some_public_channel', 'some_event',
   procedure (Message: string)
   begin
-   Form.Memo.Lines.Add('[Event-Message]: ' + Message);
+    Log('[Event-Message]: ' + Message);
   end)
 ```
-Make sure all the dependencies are on the same folder that your exe.
+
+Remember to pay attention to the thread context in which you're running this code. The `Log` method implementation look like this (for use with VCL):
+```
+TThread.Queue(nil, procedure
+  begin
+    MemoLog.Lines.Add(Message)
+  end);
+end;
+```
 
 ### Secure Connections / SSL
 
@@ -62,22 +70,19 @@ You can use some events to track the Pusher Client activity.
 ```
 PusherClient.OnError := procedure(Message: string)
   begin
-    MemoError.Lines.Add('[ERROR]: ' + Message);
-    Application.ProcessMessages;
+    Error('[ERROR]: ' + Message);
   end;
 ```
 ```
 PusherClient.OnLog := procedure(Message: string)
   begin
-    MemoLog.Lines.Add('[LOG]: ' + Message);
-    Application.ProcessMessages;
+    Log('[LOG]: ' + Message);
   end;
 ```
 ```
 PusherClient.OnConnectionStateChange := procedure(Message: string)
   begin
-    MemoStatus.Lines.Add('[STATUS]: ' + Message);
-    Application.ProcessMessages;
+    Log('[STATUS]: ' + Message);
   end;
 ```
 

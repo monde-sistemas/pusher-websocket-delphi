@@ -23,6 +23,8 @@ type
     MemoError: TMemo;
     GroupBox4: TGroupBox;
     MemoLog: TMemo;
+    procedure Log(Message: string);
+    procedure Error(Message: string);
     procedure BtnSubscribeClick(Sender: TObject);
     procedure BtnConnectClick(Sender: TObject);
   private
@@ -74,8 +76,7 @@ begin
    PusherClient.Subscribe(EdtChannel.Text, EdtEvent.Text,
      procedure (Message: string)
      begin
-       MemoLog.Lines.Add('[EVENT-MESSAGE]: ' + Message);
-       Application.ProcessMessages;
+       Log('[EVENT-MESSAGE]: ' + Message)
      end)
 end;
 
@@ -104,25 +105,39 @@ begin
   PusherClient.Disconnect;
 end;
 
+procedure TPusherClientExampleForm.Error(Message: string);
+begin
+  TThread.Queue(nil, procedure
+    begin
+      MemoError.Lines.Add(Message)
+    end);
+end;
+
 procedure TPusherClientExampleForm.InitializePusherClient;
 begin
   PusherClient := TPusherClient.GetInstance;
   PusherClient.OnError := procedure(Message: string)
     begin
-      MemoError.Lines.Add('[ERROR]: ' + Message);
-      Application.ProcessMessages;
+      Error('[ERROR]: ' + Message);
     end;
 
   PusherClient.OnLog := procedure(Message: string)
     begin
-      MemoLog.Lines.Add('[LOG]: ' + Message);
-      Application.ProcessMessages;
+      Log('[LOG]: ' + Message);
     end;
 
   PusherClient.OnConnectionStateChange := procedure(Message: string)
     begin
       ConnectionStatus(Message);
     end;
+end;
+
+procedure TPusherClientExampleForm.Log(Message: string);
+begin
+  TThread.Queue(nil, procedure
+    begin
+      MemoLog.Lines.Add(Message)
+    end);
 end;
 
 end.
