@@ -6,7 +6,9 @@ Register at http://pusher.com and use the application credentials within your ap
 
 More general documentation can be found at http://pusher.com/docs/.
 
-This library is based on [Pusher .NET Client](Pusher .NET Client library) and uses the .NET lib as a DLL (see dotnet folder), so, this lib depends on .NET 4.5.
+This library is based on [Pusher .NET Client](https://github.com/pusher-community/pusher-websocket-dotnet) and uses the .NET lib as a DLL (see dotnet folder), so, this lib depends on .NET 4.5.
+
+Looking for a server library? Take a look at [pusher-http-delphi](https://github.com/monde-sistemas/pusher-http-delphi)
 
 ## Limitations
 
