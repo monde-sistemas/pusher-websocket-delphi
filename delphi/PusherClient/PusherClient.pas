@@ -28,9 +28,8 @@ type
     procedure Log(Message: string);
     procedure ConnectionStateChange(Message: string);
   public
-    class function GetInstance(): TPusherClient;
-    procedure Connect(Key: string; Options: TConnectionOptions = [coUseSSL];
-      CustomHost: string = '');
+    class function Instance(): TPusherClient;
+    procedure Connect(Key: string; CustomHost: string = ''; Options: TConnectionOptions = [coUseSSL]);
     procedure Disconnect();
     procedure Subscribe(Channel, EventName: String; Callback: TCallbackProcedure);
     property OnError: TCallbackProcedure read FOnError write FOnError;
@@ -47,12 +46,12 @@ implementation
 
 procedure OnLogStdCall(Message: pchar); stdcall;
 begin
-  TPusherClient.GetInstance.Log(StrPas(Message));
+  TPusherClient.Instance.Log(StrPas(Message));
 end;
 
 procedure OnErrorStdCall(message: pchar); stdcall;
 begin
-  TPusherClient.GetInstance.Error(StrPas(Message));
+  TPusherClient.Instance.Error(StrPas(Message));
 end;
 
 procedure OnSubscribeEventStdCall(Channel: pchar; EventName: pchar; Message: pchar); stdcall;
@@ -60,7 +59,7 @@ var
   ErrorMessage: string;
 begin
   try
-    TPusherClient.GetInstance.FSubscribed[StrPas(Channel)][StrPas(EventName)](StrPas(Message));
+    TPusherClient.Instance.FSubscribed[StrPas(Channel)][StrPas(EventName)](StrPas(Message));
   except
     on E:Exception do
     begin
@@ -69,18 +68,18 @@ begin
         + sLineBreak + '[Channel][Event]: Message: [%s][%s]: [%s]'
         + sLineBreak + 'Error: [%s]',
         [StrPas(Channel), StrPas(EventName), StrPas(Message), E.Message]);
-      TPusherClient.GetInstance.Error(ErrorMessage);
-      TPusherClient.GetInstance.Log(ErrorMessage);
+      TPusherClient.Instance.Error(ErrorMessage);
+      TPusherClient.Instance.Log(ErrorMessage);
     end;
   end;
 end;
 
 procedure OnConnectionStateChangeStdCall(message: pchar); stdcall;
 begin
-  TPusherClient.GetInstance.ConnectionStateChange(StrPas(Message));
+  TPusherClient.Instance.ConnectionStateChange(StrPas(Message));
 end;
 
-procedure TPusherClient.Connect(Key: string; Options: TConnectionOptions; CustomHost: string);
+procedure TPusherClient.Connect(Key, CustomHost: string; Options: TConnectionOptions);
 begin
   PusherClientNative.InitializePusherClient(Key, coUseSSL in Options, CustomHost);
 
@@ -111,7 +110,7 @@ begin
   PusherClientNative.Disconnect;
 end;
 
-class function TPusherClient.GetInstance: TPusherClient;
+class function TPusherClient.Instance: TPusherClient;
 begin
   if not Assigned(Self.FInstance) then
     self.FInstance := TPusherClient.Create;
@@ -120,20 +119,37 @@ end;
 
 procedure TPusherClient.ConnectionStateChange(Message: string);
 begin
-  if Assigned(TPusherClient.GetInstance.FOnConnectionStateChange) then
-    TPusherClient.GetInstance.FOnConnectionStateChange(Message);
+  try
+    if Assigned(FOnConnectionStateChange) then
+      FOnConnectionStateChange(Message);
+  except
+    on E:Exception do
+      Error('An error occurred while calling the event OnConnectionStateChange: ' + e.message)
+  end;
 end;
 
 procedure TPusherClient.Error(Message: string);
 begin
-  if Assigned(TPusherClient.GetInstance.FOnError) then
-    TPusherClient.GetInstance.FOnError(Message);
+  try
+    if Assigned(FOnError) then
+      FOnError(Message);
+  except
+    // This method cannot fail under any circumstances. It is called by the ComObj callback.
+    // if some of the others callbacks (OnLog, OnConnectionStateChange) fails they will call this
+    // method to try to inform the client application about the problem, but, if this method
+    // fails, there are nothing we can do.
+  end;
 end;
 
 procedure TPusherClient.Log(Message: string);
 begin
-  if Assigned(TPusherClient.GetInstance.FOnLog) then
-    TPusherClient.GetInstance.FOnLog(Message);
+  try
+    if Assigned(FOnLog) then
+      FOnLog(Message);
+  except
+    on E:Exception do
+      Error('An error occurred while calling the event OnLog: ' + e.message)
+  end;
 end;
 
 class procedure TPusherClient.ReleaseInstance;

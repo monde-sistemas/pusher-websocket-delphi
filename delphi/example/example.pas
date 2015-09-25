@@ -33,8 +33,6 @@ type
     procedure ConnectionStatus(Status: string);
     procedure Connect;
     procedure Disconnect;
-  public
-    { Public declarations }
   end;
 
 var
@@ -73,11 +71,11 @@ begin
   if SubscribeList.Items.IndexOf(ListItem) = -1 then
     SubscribeList.Items.Add(EdtChannel.Text + ' | ' + EdtEvent.Text);
 
-   PusherClient.Subscribe(EdtChannel.Text, EdtEvent.Text,
-     procedure (Message: string)
-     begin
-       Log('[EVENT-MESSAGE]: ' + Message)
-     end)
+  PusherClient.Subscribe(EdtChannel.Text, EdtEvent.Text,
+    procedure (Message: string)
+    begin
+      Log('[EVENT-MESSAGE]: ' + Message)
+    end)
 end;
 
 procedure TPusherClientExampleForm.Connect;
@@ -88,7 +86,7 @@ begin
   if ChkUseSSL.Checked then
     Options := [coUseSSL];
 
-  PusherClient.Connect(EdtKey.Text, Options, EdtHost.Text);
+  PusherClient.Connect(EdtKey.Text, EdtHost.Text, Options);
 end;
 
 procedure TPusherClientExampleForm.ConnectionStatus(Status: string);
@@ -115,7 +113,7 @@ end;
 
 procedure TPusherClientExampleForm.InitializePusherClient;
 begin
-  PusherClient := TPusherClient.GetInstance;
+  PusherClient := TPusherClient.Instance;
   PusherClient.OnError := procedure(Message: string)
     begin
       Error('[ERROR]: ' + Message);

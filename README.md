@@ -29,6 +29,11 @@ All of them are shipped with this lib releases.
 
 Download the [last release](https://github.com/monde-sistemas/pusher-websocket-delphi/releases/latest) zip package and add it to your project. Make sure all the dependencies are on the same folder that your exe.
 
+Register the DLL using RegAsm:
+```
+%windir%\Microsoft.NET\Framework\v4.0.30319\regasm.exe /codebase PusherClientNative.dll /tlb:PusherClientNative.tlb
+```
+
 Add `PusherClient` to your unit uses clause.
 
 ```
@@ -56,14 +61,14 @@ end;
 
 SSL is enabled by default. You can disable it by passing a empty option list `[]` to the `Connect` method:
 ```
-PusherClient.Connect('your_pusher_key', []);
+PusherClient.Connect('your_pusher_key', '', []);
 ```
 
 ### Custom Host Address
 
 It is possible to use a custom host address:
 ```
-PusherClient.Connect('your_pusher_key', [], 'localhost');
+PusherClient.Connect('your_pusher_key', 'localhost');
 ```
 The [default value](https://github.com/pusher-community/pusher-websocket-dotnet/blob/master/PusherClient/Pusher.cs#L43) is `ws.pusherapp.com` which is the pusher.com endpoint, but you can also use it with a [poxa](https://github.com/edgurgel/poxa) server hosted in your own server.
 
