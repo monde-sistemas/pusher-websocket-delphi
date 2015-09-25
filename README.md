@@ -8,6 +8,8 @@ More general documentation can be found at http://pusher.com/docs/.
 
 This library is based on [Pusher .NET Client](https://github.com/pusher-community/pusher-websocket-dotnet) and uses the .NET lib as a DLL (see dotnet folder), so, this lib depends on .NET 4.5.
 
+Tested on Delphi XE7 but should work in any XE+ version.
+
 Looking for a server library? Take a look at [pusher-http-delphi](https://github.com/monde-sistemas/pusher-http-delphi)
 
 ## Limitations
