@@ -29,6 +29,11 @@ All of them are shipped with this lib releases.
 
 Download the [last release](https://github.com/monde-sistemas/pusher-websocket-delphi/releases/latest) zip package and add it to your project. Make sure all the dependencies are on the same folder that your exe.
 
+Register the DLL using RegAsm:
+```
+%windir%\Microsoft.NET\Framework\v4.0.30319\regasm.exe /codebase PusherClientNative.dll /tlb:PusherClientNative.tlb
+```
+
 Add `PusherClient` to your unit uses clause.
 
 ```
