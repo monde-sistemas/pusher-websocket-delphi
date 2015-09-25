@@ -113,7 +113,7 @@ end;
 
 procedure TPusherClientExampleForm.InitializePusherClient;
 begin
-  PusherClient := TPusherClient.GetInstance;
+  PusherClient := TPusherClient.Instance;
   PusherClient.OnError := procedure(Message: string)
     begin
       Error('[ERROR]: ' + Message);

@@ -28,7 +28,7 @@ type
     procedure Log(Message: string);
     procedure ConnectionStateChange(Message: string);
   public
-    class function GetInstance(): TPusherClient;
+    class function Instance(): TPusherClient;
     procedure Connect(Key: string; CustomHost: string = ''; Options: TConnectionOptions = [coUseSSL]);
     procedure Disconnect();
     procedure Subscribe(Channel, EventName: String; Callback: TCallbackProcedure);
@@ -46,12 +46,12 @@ implementation
 
 procedure OnLogStdCall(Message: pchar); stdcall;
 begin
-  TPusherClient.GetInstance.Log(StrPas(Message));
+  TPusherClient.Instance.Log(StrPas(Message));
 end;
 
 procedure OnErrorStdCall(message: pchar); stdcall;
 begin
-  TPusherClient.GetInstance.Error(StrPas(Message));
+  TPusherClient.Instance.Error(StrPas(Message));
 end;
 
 procedure OnSubscribeEventStdCall(Channel: pchar; EventName: pchar; Message: pchar); stdcall;
@@ -59,7 +59,7 @@ var
   ErrorMessage: string;
 begin
   try
-    TPusherClient.GetInstance.FSubscribed[StrPas(Channel)][StrPas(EventName)](StrPas(Message));
+    TPusherClient.Instance.FSubscribed[StrPas(Channel)][StrPas(EventName)](StrPas(Message));
   except
     on E:Exception do
     begin
@@ -68,15 +68,15 @@ begin
         + sLineBreak + '[Channel][Event]: Message: [%s][%s]: [%s]'
         + sLineBreak + 'Error: [%s]',
         [StrPas(Channel), StrPas(EventName), StrPas(Message), E.Message]);
-      TPusherClient.GetInstance.Error(ErrorMessage);
-      TPusherClient.GetInstance.Log(ErrorMessage);
+      TPusherClient.Instance.Error(ErrorMessage);
+      TPusherClient.Instance.Log(ErrorMessage);
     end;
   end;
 end;
 
 procedure OnConnectionStateChangeStdCall(message: pchar); stdcall;
 begin
-  TPusherClient.GetInstance.ConnectionStateChange(StrPas(Message));
+  TPusherClient.Instance.ConnectionStateChange(StrPas(Message));
 end;
 
 procedure TPusherClient.Connect(Key, CustomHost: string; Options: TConnectionOptions);
@@ -110,7 +110,7 @@ begin
   PusherClientNative.Disconnect;
 end;
 
-class function TPusherClient.GetInstance: TPusherClient;
+class function TPusherClient.Instance: TPusherClient;
 begin
   if not Assigned(Self.FInstance) then
     self.FInstance := TPusherClient.Create;
