@@ -29,12 +29,14 @@ type
     procedure ConnectionStateChange(Message: string);
   public
     class function GetInstance(): TPusherClient;
-    procedure Connect(Key: string; Options: TConnectionOptions = []; CustomHost: string = '');
+    procedure Connect(Key: string; Options: TConnectionOptions = [coUseSSL];
+      CustomHost: string = '');
     procedure Disconnect();
     procedure Subscribe(Channel, EventName: String; Callback: TCallbackProcedure);
     property OnError: TCallbackProcedure read FOnError write FOnError;
     property OnLog: TCallbackProcedure read FOnLog write FOnLog;
-    property OnConnectionStateChange: TCallbackProcedure read FOnConnectionStateChange write FOnConnectionStateChange;
+    property OnConnectionStateChange: TCallbackProcedure read FOnConnectionStateChange
+      write FOnConnectionStateChange;
     destructor Destroy; override;
   end;
 

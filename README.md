@@ -25,7 +25,7 @@ All of them are shipped with this lib releases.
 
 ## Usage
 
-Download the [last release](https://github.com/monde-sistemas/pusher-websocket-delphi/releases/) zip package and add it to your project. Make sure all the dependencies are on the same folder that your exe.
+Download the [last release](https://github.com/monde-sistemas/pusher-websocket-delphi/releases/latest) zip package and add it to your project. Make sure all the dependencies are on the same folder that your exe.
 
 Add `PusherClient` to your unit uses clause.
 
@@ -52,9 +52,9 @@ end;
 
 ### Secure Connections / SSL
 
-You can use SSL by passing the `coUseSSL` connection option to the `Connect` method:
+SSL is enabled by default. You can disable it by passing a empty option list `[]` to the `Connect` method:
 ```
-PusherClient.Connect('your_pusher_key', [coUseSSL]]);
+PusherClient.Connect('your_pusher_key', []);
 ```
 
 ### Custom Host Address
